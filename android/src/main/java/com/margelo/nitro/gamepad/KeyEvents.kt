@@ -3,8 +3,14 @@ package com.margelo.nitro.gamepad
 import android.view.InputDevice
 import android.view.KeyEvent
 
-/** A button or D-pad key coming from a gamepad, not a keyboard. */
+/**
+ * A button or D-pad key coming from a gamepad, not a keyboard. Fallback events
+ * (D-pad keys Android synthesizes from stick movement, DPAD_CENTER/BACK from an
+ * unhandled A/B) are skipped: JS already got the original stick/button event.
+ */
 internal fun KeyEvent.isGamepadKey(): Boolean {
+  if ((flags and KeyEvent.FLAG_FALLBACK) != 0) return false
+
   val fromGamepad =
     isFromSource(InputDevice.SOURCE_GAMEPAD) ||
       isFromSource(InputDevice.SOURCE_JOYSTICK) ||

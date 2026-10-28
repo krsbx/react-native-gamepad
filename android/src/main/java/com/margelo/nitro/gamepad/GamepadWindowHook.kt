@@ -15,7 +15,9 @@ import com.margelo.nitro.NitroModules
 /**
  * Captures gamepad input without the host app touching MainActivity: every
  * resumed activity's Window.Callback gets wrapped so key/motion events from
- * gamepads reach [GamepadInput] before the view hierarchy.
+ * gamepads are reported to [GamepadInput]. Events are observed, never
+ * consumed: Android still needs them for focus navigation, stick-to-D-pad
+ * synthesis and the A/B -> confirm/back fallbacks.
  */
 internal object GamepadWindowHook : Application.ActivityLifecycleCallbacks {
   private var installed = false
@@ -52,11 +54,15 @@ internal object GamepadWindowHook : Application.ActivityLifecycleCallbacks {
 private class GamepadWindowCallback(
   private val delegate: Window.Callback,
 ) : Window.Callback by delegate {
-  override fun dispatchKeyEvent(event: KeyEvent): Boolean =
-    GamepadInput.onKeyEvent(event) || delegate.dispatchKeyEvent(event)
+  override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+    GamepadInput.onKeyEvent(event)
+    return delegate.dispatchKeyEvent(event)
+  }
 
-  override fun dispatchGenericMotionEvent(event: MotionEvent): Boolean =
-    GamepadInput.onMotionEvent(event) || delegate.dispatchGenericMotionEvent(event)
+  override fun dispatchGenericMotionEvent(event: MotionEvent): Boolean {
+    GamepadInput.onMotionEvent(event)
+    return delegate.dispatchGenericMotionEvent(event)
+  }
 
   // Java default methods: forward explicitly so wrapping doesn't swallow them.
   override fun onProvideKeyboardShortcuts(data: MutableList<KeyboardShortcutGroup>?, menu: Menu?, deviceId: Int) =

@@ -24,19 +24,16 @@ internal object GamepadInput {
 
   private val lastAxes = HashMap<Int, GamepadAxes>()
 
-  /** Returns true when the event was delivered to JS and should be consumed. */
-  fun onKeyEvent(event: KeyEvent): Boolean {
-    val listener = keyListener ?: return false
-    if (!event.isGamepadKey()) return false
+  fun onKeyEvent(event: KeyEvent) {
+    val listener = keyListener ?: return
+    if (!event.isGamepadKey()) return
 
     listener(event.toNativeGamepadKeyEvent())
-    return true
   }
 
-  /** Returns true when the event was delivered to JS and should be consumed. */
-  fun onMotionEvent(event: MotionEvent): Boolean {
-    val listener = axesListener ?: return false
-    if (!event.isGamepadAxesMove()) return false
+  fun onMotionEvent(event: MotionEvent) {
+    val listener = axesListener ?: return
+    if (!event.isGamepadAxesMove()) return
 
     val axes = event.toGamepadAxes()
     // Sticks resting inside the dead zone keep firing ACTION_MOVE; skip repeats.
@@ -50,6 +47,5 @@ internal object GamepadInput {
         )
       )
     }
-    return true
   }
 }
