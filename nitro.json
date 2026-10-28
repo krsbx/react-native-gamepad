@@ -1,0 +1,23 @@
+{
+  "cxxNamespace": ["gamepad"],
+  "ios": {
+    "iosModuleName": "Gamepad"
+  },
+  "android": {
+    "androidNamespace": ["gamepad"],
+    "androidCxxLibName": "gamepad"
+  },
+  "autolinking": {
+    "Gamepad": {
+      "ios": {
+        "language": "swift",
+        "implementationClassName": "Gamepad"
+      },
+      "android": {
+        "language": "kotlin",
+        "implementationClassName": "Gamepad"
+      }
+    }
+  },
+  "ignorePaths": ["node_modules"]
+}
