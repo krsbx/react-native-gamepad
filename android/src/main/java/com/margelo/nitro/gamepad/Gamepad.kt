@@ -60,18 +60,13 @@ class Gamepad : HybridGamepadSpec() {
   }
 
   /**
-   * The device's own motor, else the system vibrator when the device is built
-   * in (a handheld's controls report no vibrator, but the handheld rumbles) or
-   * isn't an input device at all (e.g. -1). An external controller without a
-   * motor gets nothing rather than buzzing the phone.
+   * The device's own motor, else the system vibrator. Handhelds' built-in
+   * controls report no vibrator (and may even claim to be external — the Odin
+   * 3 shows up as a USB "Xbox Wireless Controller"), but the handheld itself
+   * rumbles through the system vibrator.
    */
-  private fun vibratorFor(deviceId: Int): Vibrator? {
-    val device = InputDevice.getDevice(deviceId) ?: return systemVibrator()
-    device.usableVibrator()?.let { return it }
-
-    val isExternal = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && device.isExternal
-    return if (isExternal) null else systemVibrator()
-  }
+  private fun vibratorFor(deviceId: Int): Vibrator? =
+    InputDevice.getDevice(deviceId)?.usableVibrator() ?: systemVibrator()
 
   private fun systemVibrator(): Vibrator? {
     val context = NitroModules.applicationContext ?: return null
