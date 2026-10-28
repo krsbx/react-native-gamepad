@@ -1,3 +1,10 @@
+export * from "./component";
+export {
+  FocusDirection,
+  GamepadButton,
+  GamepadEventKind,
+  GamepadKeyAction,
+} from "./constant";
 export {
   addGamepadListener,
   getConnectedGamepads,

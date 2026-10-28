@@ -39,3 +39,20 @@ export const GamepadButton = {
 } as const;
 
 export type GamepadButton = (typeof GamepadButton)[keyof typeof GamepadButton];
+
+export const FocusDirection = {
+  Up: "up",
+  Down: "down",
+  Left: "left",
+  Right: "right",
+} as const;
+
+export type FocusDirection =
+  (typeof FocusDirection)[keyof typeof FocusDirection];
+
+export const DIRECTIONS: readonly FocusDirection[] = [
+  "left",
+  "right",
+  "up",
+  "down",
+];
